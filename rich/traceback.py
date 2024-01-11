@@ -603,6 +603,8 @@ class Traceback:
 
     @group()
     def _render_stack(self, stack: Stack) -> RenderResult:
+        import bpy
+        from os import sep
         path_highlighter = PathHighlighter()
         theme = self.theme
 
@@ -615,7 +617,16 @@ class Traceback:
             Returns:
                 str: Contents of file
             """
-            return "".join(linecache.getlines(filename))
+            try:
+                return "".join(linecache.getlines(filename))
+            #    with open(
+            #        filename, "rt", encoding="utf-8", errors="replace"
+            #    ) as code_file:
+            #        code = code_file.read()
+            except:
+                return bpy.data.texts[filename.split(sep)[-1]].as_string()
+            #    code = bpy.data.texts[filename.split(sep)[-1]].as_string()
+            
 
         def render_locals(frame: Frame) -> Iterable[ConsoleRenderable]:
             if frame.locals:
